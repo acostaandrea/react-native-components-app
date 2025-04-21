@@ -7,17 +7,22 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Text, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 import "../global.css";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import ThemedView from "@/presentation/shared/ThemedView";
+import ThemedText from "@/presentation/shared/ThemedText";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const backgroundColor = useThemeColor({}, 'background');
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
@@ -34,16 +39,18 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <View className="bg-light-background dark:bg-dark-background">
-        <Text className="mt-10 text-3xl text-light-text dark:text-dark-text">
-          Hola mundo
-        </Text>
-      </View>
-      {/* <Stack>       
+    <GestureHandlerRootView style={{backgroundColor:backgroundColor, flex: 1}}>
+      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+        <ThemedView margin>
+          <ThemedText className="mt-20" type="h1">
+            Hola mundo
+          </ThemedText>
+        </ThemedView>
+        {/* <Stack>       
       </Stack> */}
 
-      <StatusBar style="auto" />
-    </ThemeProvider>
+        <StatusBar style="auto" />
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
